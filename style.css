@@ -1,3 +1,28 @@
 #root {
-  color: red;
+  color: black;
+  background-color: rgb(224, 222, 222);
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 30px;
+  grid-auto-rows: max-content;
+  width: 100%;
+}
+.title-image-summary-container {
+  background-color: rgb(238, 229, 229);
+  border-radius: 10px;
+}
+
+.episode-title {
+  text-align: center;
+  margin-top: 0px;
+  height: 40px;
+  background-color: white;
+  border: 1px solid rgb(160, 159, 159);
+  border-radius: 10px;
+}
+.episode-image {
+  margin-left: 12.5%;
+}
+.episode-summary {
+  margin-left: 8%;
 }
