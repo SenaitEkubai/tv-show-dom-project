@@ -1,3 +1,7 @@
+body {
+  background-color: rgb(238, 229, 229);
+}
+
 #root {
   color: black;
   background-color: rgb(224, 222, 222);
@@ -7,22 +11,33 @@
   grid-auto-rows: max-content;
   width: 100%;
 }
+
 .title-image-summary-container {
-  background-color: rgb(238, 229, 229);
+  margin-top: 50px;
+  background-color: rgb(221, 180, 180);
   border-radius: 10px;
+  overflow: hidden;
 }
 
 .episode-title {
   text-align: center;
   margin-top: 0px;
   height: 40px;
-  background-color: white;
+  background-color: rgb(247, 162, 162);
   border: 1px solid rgb(160, 159, 159);
   border-radius: 10px;
+  padding-top: 15px;
 }
 .episode-image {
   margin-left: 12.5%;
 }
 .episode-summary {
   margin-left: 8%;
+  text-align: justify;
+}
+/*input field style*/
+#search-field {
+  height: 30px;
+  width: 300px;
+  outline: grey;
 }
