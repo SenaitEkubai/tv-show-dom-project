@@ -1,5 +1,6 @@
 //You can edit ALL of the code here
 let allEpisodes;
+let check = false;
 function setup() {
   allEpisodes = getAllEpisodes();
   displayAllEpisodes(allEpisodes);
@@ -65,12 +66,27 @@ function createDropDownMenu(allEpisodes) {
       2,
       "0"
     )} - ${episode.name}`;
+    option.value = episode.name;
     selectTag.appendChild(option);
-    selectTag.addEventListener("change", () => {
-      window.location.href = option.value = `${episode.url}`;
+    selectTag.addEventListener("change", (event) => {
+      //window.location.href = option.value = `${episode.url}`;
+      let searchInput = document.getElementById("search-field");
+      searchInput.value = event.target.value;
+      const selected = allEpisodes.filter((episode) => {
+        return episode.name === event.target.value;
+      });
+      displayAllEpisodes(selected);
+      // when the select an episode choice is selected tall episodes will be displayed
+      if (event.target.value == "") {
+        displayAllEpisodes(allEpisodes);
+      }
     });
   });
 }
-
+/* let searchInput = document.getElementById("search-field");
+  searchInput.addEventListener("input", () => {
+    const selectTag = document.getElementById("selectMenu");
+    selectTag.value = "search here";
+  }); */
 // display selected episode
 window.onload = setup;
