@@ -1,14 +1,10 @@
 //You can edit ALL of the code here
 let allEpisodes;
-
-// let matchedList = document.getElementById("matchedList");
-// setup function will load the page with all episodes
 function setup() {
   allEpisodes = getAllEpisodes();
   displayAllEpisodes(allEpisodes);
   let searchInput = document.getElementById("search-field");
   searchInput.addEventListener("input", (event) => {
-    //allEpisodes = getAllEpisodes();
     let value = event.target.value.toLowerCase();
     let foundLists = allEpisodes.filter((show) => {
       let toLowerCaseName = show.name.toLowerCase();
@@ -24,6 +20,7 @@ function setup() {
     ).innerHTML = `Displaying ${foundLists.length} / ${allEpisodes.length}`;
     displayAllEpisodes(foundLists);
   });
+  createDropDownMenu();
 }
 // this function will create the elements and append them to the root element
 function display(show) {
@@ -57,6 +54,23 @@ function displayAllEpisodes(array) {
     display(show);
   });
 }
-// event listener
 
+// dropdown menu
+function createDropDownMenu(allEpisodes) {
+  allEpisodes = getAllEpisodes();
+  const selectTag = document.getElementById("selectMenu");
+  allEpisodes.forEach((episode) => {
+    let option = document.createElement("option");
+    option.innerHTML = `S${episode.season}E${String(episode.number).padStart(
+      2,
+      "0"
+    )} - ${episode.name}`;
+    selectTag.appendChild(option);
+    selectTag.addEventListener("change", () => {
+      window.location.href = option.value = `${episode.url}`;
+    });
+  });
+}
+
+// display selected episode
 window.onload = setup;
