@@ -71,7 +71,7 @@ function createDropDownMenu(allEpisodes) {
     selectTag.addEventListener("change", (event) => {
       //window.location.href = option.value = `${episode.url}`;
       let searchInput = document.getElementById("search-field");
-      searchInput.value = event.target.value;
+      searchInput.value = event.target.value; // whatever is selected from the dropdown list will be displayed in the input field
       const selected = allEpisodes.filter((episode) => {
         return episode.name === event.target.value;
       });
