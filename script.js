@@ -66,7 +66,33 @@ function displayShow(show) {
   imageElement.classList = "episode-image";
   titleElement.classList = "episode-title";
   summaryElement.classList = "episode-summary";
+
+  // needs to be tided up
+  // genre
+  const genreElement = document.createElement("p");
+  genreElement.innerHTML = `Genres: ${show.genres}`;
+  genreElement.style.color = "red";
+  divContainer.appendChild(genreElement);
+  //runtime
+  const runTimeElement = document.createElement("p");
+  runTimeElement.innerHTML = `Runtime: ${show.runtime}`;
+  runTimeElement.style.color = "red";
+  divContainer.appendChild(runTimeElement);
+  // status
+  const statusElement = document.createElement("p");
+  statusElement.innerHTML = `Status: ${show.status}`;
+  statusElement.style.color = "red";
+  divContainer.appendChild(statusElement);
+  // rating
+  const ratingElement = document.createElement("p");
+  ratingElement.innerHTML = `Ratings: ${Object.keys(
+    show.rating
+  )} : ${Object.values(show.rating)}`;
+  ratingElement.style.color = "red";
+  divContainer.appendChild(ratingElement);
+
   divContainer.id = "div";
+  // create other div
   // inner html
   titleElement.innerHTML = `${show.name}`;
   if (show.image == null) {
