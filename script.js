@@ -8,7 +8,6 @@ let mode = "shows";
 
 createDropDownMenuForShows(allShows);
 displayAllShows(allShows);
-//filterShows(allShows);
 
 // fetch allEpisodes function
 
@@ -21,9 +20,10 @@ function fetchEpisodes(showId) {
     });
 }
 
+// filter shows function
+
 function filterShows(event) {
   let value = event.target.value.toLowerCase();
-  console.log("filterShows", value);
   let foundLists = allShows.filter((show) => {
     let toLowerCaseName = show.name.toLowerCase();
     let toLowerCaseSummary = show.summary.toLowerCase();
@@ -37,20 +37,21 @@ function filterShows(event) {
     "results"
   ).innerHTML = `Displaying ${foundLists.length} / ${allShows.length}`;
 }
-/*This setup function will take an array as a parameter, call the search input event listener, filter the array 
+/*call the search input event listener, filter the array 
   to display the searched episode 
   */
 function filterEpisodes(event) {
   let value = event.target.value.toLowerCase();
-  let foundLists = episodes.filter((show) => {
-    let toLowerCaseName = show.name.toLowerCase();
-    let toLowerCaseSummary = show.summary.toLowerCase();
+
+  let foundLists = episodes.filter((episode) => {
+    let toLowerCaseName = episode.name.toLowerCase();
+    let toLowerCaseSummary = episode.summary.toLowerCase();
 
     return (
       toLowerCaseName.includes(value) || toLowerCaseSummary.includes(value)
     );
   });
-  displayAllShows(foundLists);
+  displayAllEpisodes(foundLists);
   document.getElementById(
     "results"
   ).innerHTML = `Displaying ${foundLists.length} / ${episodes.length}`;
@@ -67,37 +68,25 @@ function createDropDownMenuForShows(allShows) {
     selectShowTag.appendChild(option);
   });
   let searchInput = document.getElementById("search-field");
-  searchInput.addEventListener("change", filterShows);
+  searchInput.addEventListener("input", filterShows);
   selectShowTag.addEventListener("change", (event) => {
     searchInput.value = "";
     let showId = event.target.value;
     if (showId) {
       if (mode == "shows") {
         mode = "episodes";
-        searchInput.removeEventListener("change", filterShows);
-        searchInput.addEventListener("change", filterEpisodes);
+        searchInput.removeEventListener("input", filterShows);
+        searchInput.addEventListener("input", filterEpisodes);
       }
       fetchEpisodes(showId);
     } else {
       if (mode == "episodes") {
         mode = "shows";
-        searchInput.removeEventListener("change", filterEpisodes);
-        searchInput.addEventListener("change", filterShows);
+        searchInput.removeEventListener("input", filterEpisodes);
+        searchInput.addEventListener("input", filterShows);
       }
       displayAllShows(allShows);
     }
-
-    /* document.getElementById("results").innerHTML = "";
-    document.getElementById("selectMenu").innerHTML = "";
-    // whatever is selected from the dropdown list will be displayed in the input field
-    const selected = allShows.filter((show) => {
-      return show.name === event.target.value;
-    });
-    displayAllShows(selected); */
-    // when the select an episode choice is selected all episodes will be displayed
-    /*  if (event.target.value == "") {
-      displayAllShows(allShows);
-    } */
   });
 }
 
@@ -108,41 +97,40 @@ function displayShow(show) {
   const titleElement = document.createElement("h3");
   const imageElement = document.createElement("img");
   const summaryElement = document.createElement("p");
+  const genreRatingStatus = document.createElement("div");
   // appending elements to the page
   document.getElementById("root").appendChild(divContainer);
   divContainer.appendChild(titleElement);
   divContainer.appendChild(imageElement);
   divContainer.appendChild(summaryElement);
+  divContainer.appendChild(genreRatingStatus);
   // give div a class for better accessibility
   divContainer.classList = "title-image-summary-container";
   imageElement.classList = "episode-image";
   titleElement.classList = "episode-title";
   summaryElement.classList = "episode-summary";
+  genreRatingStatus.classList = "genre-rating-status";
 
   // needs to be tided up
   // genre
   const genreElement = document.createElement("p");
-  genreElement.innerHTML = `Genres: ${show.genres}`;
-  genreElement.style.color = "red";
-  divContainer.appendChild(genreElement);
+  genreElement.innerHTML = `Genres:   ${show.genres}`;
+  genreRatingStatus.appendChild(genreElement);
   //runtime
   const runTimeElement = document.createElement("p");
-  runTimeElement.innerHTML = `Runtime: ${show.runtime}`;
-  runTimeElement.style.color = "red";
-  divContainer.appendChild(runTimeElement);
+  runTimeElement.innerHTML = `Runtime:   ${show.runtime}`;
+  genreRatingStatus.appendChild(runTimeElement);
   // status
   const statusElement = document.createElement("p");
-  statusElement.innerHTML = `Status: ${show.status}`;
-  statusElement.style.color = "red";
-  divContainer.appendChild(statusElement);
+  statusElement.innerHTML = `Status:   ${show.status}`;
+  genreRatingStatus.appendChild(statusElement);
   // rating
   if (show.rating) {
     const ratingElement = document.createElement("p");
-    ratingElement.innerHTML = `Ratings: ${Object.keys(
+    ratingElement.innerHTML = `Ratings:   ${Object.keys(
       show.rating
     )} : ${Object.values(show.rating)}`;
-    ratingElement.style.color = "red";
-    divContainer.appendChild(ratingElement);
+    genreRatingStatus.appendChild(ratingElement);
   }
 
   // create other div
