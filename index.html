@@ -11,19 +11,23 @@
 
 <body>
   <h1>Code Your Future TV Show Project</h1>
-  <div>
-    <span><select name="Episodes" id="selectMenu">
-        <option value="">select an episode</option>
-      </select></span>
+  <div id="select-input-container">
+    <select name="Episodes" id="selectShow">
+      <option value="">select a Show</option>
+    </select>
+    <select name="Episodes" id="selectMenu">
+      <option value="">select an episode</option>
+    </select>
+
     <input id="search-field" type="search" placeholder="Search for an episode">
     <span id="results"></span>
   </div>
   <div id="root">
-
-
   </div>
 
   <!-- Loads a provided function called getAllEpisodes() which returns all episodes -->
+
+  <script src="shows.js"></script>
   <script src="episodes.js"></script>
 
   <!-- Loads YOUR javascript code -->
@@ -31,7 +35,7 @@
     <p>This data has come from TVMAZE. for more visit TVMAZE<a href="https://www.tvmaze.com/"> TVMAZE.com</a></p>
   </footer>
   <script src="script.js"></script>
-  <script src="shows.js"></script>
+
 </body>
 
 </html>
