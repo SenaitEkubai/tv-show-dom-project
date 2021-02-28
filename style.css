@@ -6,14 +6,16 @@ h1 {
   color: rgb(31, 29, 28);
   height: 50px;
   width: 500px;
-  margin-bottom: 50px;
-  margin-left: 470px;
+  margin-left: auto;
+  margin-right: auto;
+  /* margin-bottom: 50px;
+  margin-left: 470px; */
 }
 #root {
   color: black;
   background-color: rgb(245, 239, 239);
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(auto-fill, 330px);
   gap: 30px;
   grid-auto-rows: max-content;
   width: 100%;
@@ -94,4 +96,20 @@ h1 {
   padding-bottom: 0px;
   text-align: left;
   border-radius: 5px;
+  display: none;
+}
+/* .readMore {
+  height: 400px;
+} */
+@media only screen and (max-width: 600px) {
+  html,
+  body {
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+  #root {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
 }

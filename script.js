@@ -42,7 +42,6 @@ function filterShows(event) {
   */
 function filterEpisodes(event) {
   let value = event.target.value.toLowerCase();
-
   let foundLists = episodes.filter((episode) => {
     let toLowerCaseName = episode.name.toLowerCase();
     let toLowerCaseSummary = episode.summary.toLowerCase();
@@ -98,39 +97,47 @@ function displayShow(show) {
   const imageElement = document.createElement("img");
   const summaryElement = document.createElement("p");
   const genreRatingStatus = document.createElement("div");
+  const genreElement = document.createElement("p");
+  const runTimeElement = document.createElement("p");
+  const statusElement = document.createElement("p");
+  const ratingElement = document.createElement("p");
+  const readMore = document.createElement("button");
+  const readLess = document.createElement("button");
   // appending elements to the page
   document.getElementById("root").appendChild(divContainer);
   divContainer.appendChild(titleElement);
   divContainer.appendChild(imageElement);
   divContainer.appendChild(summaryElement);
   divContainer.appendChild(genreRatingStatus);
+  genreRatingStatus.appendChild(genreElement);
+  genreRatingStatus.appendChild(runTimeElement);
+  genreRatingStatus.appendChild(statusElement);
+  genreRatingStatus.appendChild(ratingElement);
+  /* divContainer.appendChild(readMore);
+  genreRatingStatus.appendChild(readLess); */
+
   // give div a class for better accessibility
   divContainer.classList = "title-image-summary-container";
   imageElement.classList = "episode-image";
   titleElement.classList = "episode-title";
   summaryElement.classList = "episode-summary";
   genreRatingStatus.classList = "genre-rating-status";
-
-  // needs to be tided up
-  // genre
-  const genreElement = document.createElement("p");
+  /* readMore.classList = "readMore-button";
+  readLess.classList = "readLess-button"; */
+  // buttons inner html
+  /* readMore.innerHTML = "Read More";
+  readLess.innerHTML = "Read Less"; */
+  // genre inner text
   genreElement.innerHTML = `Genres:   ${show.genres}`;
-  genreRatingStatus.appendChild(genreElement);
-  //runtime
-  const runTimeElement = document.createElement("p");
+  //runtime inner html
   runTimeElement.innerHTML = `Runtime:   ${show.runtime}`;
-  genreRatingStatus.appendChild(runTimeElement);
-  // status
-  const statusElement = document.createElement("p");
+  // status inner html
   statusElement.innerHTML = `Status:   ${show.status}`;
-  genreRatingStatus.appendChild(statusElement);
-  // rating
+  // rating inner html
   if (show.rating) {
-    const ratingElement = document.createElement("p");
     ratingElement.innerHTML = `Ratings:   ${Object.keys(
       show.rating
     )} : ${Object.values(show.rating)}`;
-    genreRatingStatus.appendChild(ratingElement);
   }
 
   // create other div
@@ -150,6 +157,7 @@ function displayAllShows(array) {
     displayShow(element);
   });
 }
+
 // end of shows
 
 /*The display function creates elements and set their inner html */
