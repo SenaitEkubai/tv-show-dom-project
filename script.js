@@ -1,5 +1,4 @@
 // fetch function that will fetch data from "https://api.tvmaze.com/shows/527/episodes"
-
 // all code for shows
 
 let episodes;
@@ -46,6 +45,7 @@ function filterShows(event) {
     to display the searched episode 
     */
 function filterEpisodes(event) {
+  console.log(event);
   let value = event.target.value.toLowerCase();
   let foundLists = episodes.filter((episode) => {
     let toLowerCaseName = episode.name.toLowerCase();
