@@ -4,6 +4,7 @@
 
 let episodes;
 let allShows = getAllShows();
+let result = document.getElementById("results");
 let mode = "shows";
 
 const allElementsContainer = document.createElement("div");
