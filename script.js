@@ -1,22 +1,59 @@
 // fetch function that will fetch data from "https://api.tvmaze.com/shows/527/episodes"
 
-// all code for shows
+// global variables
 
 let episodes;
 let allShows = getAllShows();
 let mode = "shows";
 
+const allElementsContainer = document.createElement("div");
+const showsContainer = document.createElement("div");
+const root = document.getElementById("root");
+showsContainer.classList = "shows-container";
+allElementsContainer.classList = "bigger-container";
+
+//creating select and search elements of the page
+
+const selectAndSearchDiv = document.createElement("div");
+const selectShowElement = document.createElement("select");
+const selectEpisodeElement = document.createElement("select");
+const searchField = document.createElement("input");
+searchField.placeholder = "search for ";
+searchField.type = "search";
+
+// result element
+
+const result = document.createElement("p");
+selectAndSearchDiv.appendChild(selectShowElement);
+selectAndSearchDiv.appendChild(selectEpisodeElement);
+selectAndSearchDiv.appendChild(searchField);
+selectAndSearchDiv.appendChild(result);
+
+// adding class to elements
+
+selectAndSearchDiv.classList = "selectAndSearchDiv";
+selectShowElement.innerHTML = "<option>Select a Show</option>";
+selectEpisodeElement.innerHTML = "<option>Select an episode</option>";
+
+// title element
+
+const titleAndFieldsDiv = document.createElement("div");
+allElementsContainer.appendChild(titleAndFieldsDiv);
+const titleElement = document.createElement("h2");
+titleElement.innerHTML = "All Your Shows In One Place";
+titleAndFieldsDiv.appendChild(titleElement);
+titleAndFieldsDiv.appendChild(selectAndSearchDiv);
+
 // calling all functions
 
 createDropDownMenuForShows(allShows);
 displayAllShows(allShows);
-document.getElementById(
-  "results"
-).innerHTML = `Displaying ${allShows.length} / ${allShows.length}`;
+result.innerHTML = `Displaying ${allShows.length} / ${allShows.length}`;
+
 // fetch allEpisodes function
 
 function fetchEpisodes(showId) {
-  fetch("https://api.tvmaze.com/shows/" + showId + "/episodes")
+  fetch("http://api.tvmaze.com/shows/" + showId + "/episodes")
     .then((response) => response.json())
     .then((data) => {
       episodes = data;
@@ -37,10 +74,9 @@ function filterShows(event) {
       toLowerCaseName.includes(value) || toLowerCaseSummary.includes(value)
     );
   });
+  showsContainer.innerHTML = "";
   displayAllShows(foundLists);
-  document.getElementById(
-    "results"
-  ).innerHTML = `Displaying ${foundLists.length} / ${allShows.length}`;
+  result.innerHTML = `Displaying ${foundLists.length} / ${allShows.length}`;
 }
 /*call the search input event listener, filter the array 
     to display the searched episode 
@@ -49,12 +85,15 @@ function filterEpisodes(event) {
   let value = event.target.value.toLowerCase();
   let foundLists = episodes.filter((episode) => {
     let toLowerCaseName = episode.name.toLowerCase();
-    let toLowerCaseSummary = episode.summary.toLowerCase();
-
-    return (
-      toLowerCaseName.includes(value) || toLowerCaseSummary.includes(value)
-    );
+    let toLowerCaseSummary;
+    if (episode.summary && episode.name) {
+      toLowerCaseSummary = episode.summary.toLowerCase();
+      return (
+        toLowerCaseName.includes(value) || toLowerCaseSummary.includes(value)
+      );
+    }
   });
+  showsContainer.innerHTML = "";
   displayAllEpisodes(foundLists);
   document.getElementById(
     "results"
@@ -65,38 +104,39 @@ function filterEpisodes(event) {
 
 function createDropDownMenuForShows(allShows) {
   sorter(allShows);
-  const selectShowTag = document.getElementById("selectShow");
   allShows.forEach((show) => {
     let option = document.createElement("option");
     option.innerHTML = `${show.name}`;
     option.value = show.id;
-    selectShowTag.appendChild(option);
+    selectShowElement.appendChild(option);
   });
 
-  let searchInput = document.getElementById("search-field");
-  searchInput.addEventListener("input", filterShows);
-  selectShowTag.addEventListener("change", (event) => {
-    searchInput.value = "";
-    let showId = event.target.value;
-    if (showId) {
-      if (mode == "shows") {
-        mode = "episodes";
-        searchInput.removeEventListener("input", filterShows);
-        searchInput.addEventListener("input", filterEpisodes);
-      }
-      fetchEpisodes(showId);
-    } else {
-      if (mode == "episodes") {
-        mode = "shows";
-        searchInput.removeEventListener("input", filterEpisodes);
-        searchInput.addEventListener("input", filterShows);
-      }
-      document.getElementById("selectMenu").innerHTML =
-        '<option value="" id="default-option">select an episode</option>';
+  searchField.addEventListener("input", filterShows);
+  selectShowElement.addEventListener("change", (event) => {
+    showsContainer.innerHTML = "";
+    selectEpisodeElement.innerHTML = "<option>Select an episode</option>";
+    //searchField.value = "";
+    if (event.target.value == "Select a Show") {
       displayAllShows(allShows);
-      document.getElementById(
-        "results"
-      ).innerHTML = `Displaying ${allShows.length} / ${allShows.length}`;
+      result.innerHTML = `Displaying ${allShows.length} / ${allShows.length}`;
+    } else {
+      let showId = event.target.value;
+
+      if (showId) {
+        if (mode == "shows") {
+          mode = "episodes";
+          searchField.removeEventListener("input", filterShows);
+          searchField.addEventListener("input", filterEpisodes);
+        }
+        fetchEpisodes(showId);
+      } else {
+        if (mode == "episodes") {
+          mode = "shows";
+          searchField.removeEventListener("input", filterEpisodes);
+          searchField.addEventListener("input", filterShows);
+        }
+        result.innerHTML = `Displaying ${allShows.length} / ${allShows.length}`;
+      }
     }
   });
 }
@@ -105,33 +145,29 @@ function createDropDownMenuForShows(allShows) {
 
 function displayShow(show) {
   const divContainer = document.createElement("div");
+  const titleAndImageDiv = document.createElement("div");
   const titleElement = document.createElement("h3");
   const imageElement = document.createElement("img");
   const summaryElement = document.createElement("p");
+  // separate div
   const genreRatingStatus = document.createElement("div");
   const genreElement = document.createElement("p");
   const runTimeElement = document.createElement("p");
   const statusElement = document.createElement("p");
   const ratingElement = document.createElement("p");
-
-  // appending elements to the page
-  document.getElementById("root").appendChild(divContainer);
-  divContainer.appendChild(titleElement);
-  divContainer.appendChild(imageElement);
+  // append children
+  root.appendChild(allElementsContainer);
+  allElementsContainer.appendChild(showsContainer);
+  showsContainer.appendChild(divContainer);
+  divContainer.appendChild(titleAndImageDiv);
+  titleAndImageDiv.appendChild(titleElement);
+  titleAndImageDiv.appendChild(imageElement);
   divContainer.appendChild(summaryElement);
   divContainer.appendChild(genreRatingStatus);
   genreRatingStatus.appendChild(genreElement);
   genreRatingStatus.appendChild(runTimeElement);
   genreRatingStatus.appendChild(statusElement);
   genreRatingStatus.appendChild(ratingElement);
-
-  // give div a class for better accessibility
-
-  divContainer.classList = "title-image-summary-container";
-  imageElement.classList = "episode-image";
-  titleElement.classList = "episode-title";
-  summaryElement.classList = "episode-summary";
-  genreRatingStatus.classList = "genre-rating-status";
 
   // genre,status,rating and runtime inner content
 
@@ -176,20 +212,31 @@ function displayAllShows(array) {
 
 function display(episode) {
   const divContainer = document.createElement("div");
+  const titleAndImageDiv = document.createElement("div");
   const titleElement = document.createElement("h3");
   const imageElement = document.createElement("img");
   const summaryElement = document.createElement("p");
-  // appending elements to the page
-  document.getElementById("root").appendChild(divContainer);
-  divContainer.appendChild(titleElement);
-  divContainer.appendChild(imageElement);
+  // separate div
+  const genreRatingStatus = document.createElement("div");
+  const genreElement = document.createElement("p");
+  const runTimeElement = document.createElement("p");
+  const statusElement = document.createElement("p");
+  const ratingElement = document.createElement("p");
+  // append children
+  root.appendChild(allElementsContainer);
+  allElementsContainer.appendChild(showsContainer);
+  showsContainer.appendChild(divContainer);
+  divContainer.appendChild(titleAndImageDiv);
+  titleAndImageDiv.appendChild(titleElement);
+  titleAndImageDiv.appendChild(imageElement);
   divContainer.appendChild(summaryElement);
+  divContainer.appendChild(genreRatingStatus);
+  genreRatingStatus.appendChild(genreElement);
+  genreRatingStatus.appendChild(runTimeElement);
+  genreRatingStatus.appendChild(statusElement);
+  genreRatingStatus.appendChild(ratingElement);
   // give div a class for better accessibility
-  divContainer.classList = "title-image-summary-container";
-  imageElement.classList = "episode-image";
-  titleElement.classList = "episode-title";
-  summaryElement.classList = "episode-summary";
-  divContainer.id = "div";
+  allElementsContainer.classList = "allElementsContainer";
   // inner html
   titleElement.innerHTML = `${episode.name} - S${String(
     episode.season
@@ -205,7 +252,7 @@ function display(episode) {
 /*this function calls the display function  */
 
 function displayAllEpisodes(array) {
-  document.getElementById("root").innerHTML = "";
+  showsContainer.innerHTML = "";
   array.forEach((episode) => {
     display(episode);
   });
@@ -214,9 +261,6 @@ function displayAllEpisodes(array) {
 // create dropdown menu function
 
 function createDropDownMenuForEpisodes(allEpisodes) {
-  const selectEpisodeTag = document.getElementById("selectMenu");
-  selectEpisodeTag.innerHTML =
-    '<option value="" id="default-option">select an episode</option>';
   allEpisodes.forEach((episode) => {
     let option = document.createElement("option");
     option.innerHTML = `S${episode.season}E${String(episode.number).padStart(
@@ -224,25 +268,20 @@ function createDropDownMenuForEpisodes(allEpisodes) {
       "0"
     )} - ${episode.name}`;
     option.value = episode.name;
-    selectEpisodeTag.appendChild(option);
+    selectEpisodeElement.appendChild(option);
   });
   displayAllEpisodes(episodes);
-  document.getElementById(
-    "results"
-  ).innerHTML = `Displaying ${allEpisodes.length} / ${allEpisodes.length}`;
-  selectEpisodeTag.addEventListener("change", (event) => {
-    let searchInput = document.getElementById("search-field");
-    document.getElementById("results").innerHTML = "";
-    searchInput.value = event.target.value; // whatever is selected from the dropdown list will be displayed in the input field
+  result.innerHTML = `Displaying ${allEpisodes.length} / ${allEpisodes.length}`;
+  selectEpisodeElement.addEventListener("change", (event) => {
+    showsContainer.innerHTML = "";
+    searchField.value = event.target.value; // whatever is selected from the dropdown list will be displayed in the input field
     const selected = episodes.filter((episode) => {
       return episode.name === event.target.value;
     });
     displayAllEpisodes(selected);
-    document.getElementById(
-      "results"
-    ).innerHTML = `Displaying ${selected.length} / ${allEpisodes.length}`;
-    // when the select an episode choice is selected tall episodes will be displayed
-    if (event.target.value == "") {
+    result.innerHTML = `Displaying ${selected.length} / ${allEpisodes.length}`;
+    // when the select an episode choice is selected all episodes will be displayed
+    if (searchField.value == "") {
       displayAllEpisodes(episodes);
       document.getElementById(
         "results"
