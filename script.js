@@ -216,6 +216,23 @@ function display(episode) {
   }
 }
 
+// fetch casting
+
+function fetchCasting() {
+  fetch(`http://api.tvmaze.com/shows/1/band-of-brothers`)
+    .then((response) => response.json())
+    .then((data) => {
+      const castContainer = document.createElement("div");
+      document.body.children[0].appendChild(castContainer);
+      data._embedded.cast.forEach((item) => {
+        console.log(item.person.name);
+        let castElement = document.createElement("p");
+        castElement.innerHTML = `<a href="#" target=""> ${item.person.name},  </a> `;
+        castContainer.appendChild(castElement);
+      });
+    });
+}
+
 /*this function calls the display function for each episode */
 
 function displayAllEpisodes(array) {
