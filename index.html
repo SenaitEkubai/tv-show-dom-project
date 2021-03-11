@@ -1,21 +1,47 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>TV Show Project | My Name (My GitHub username)</title>
-    <link href="style.css" rel="stylesheet" />
-    <link rel="icon" href="/favicon.ico" type="image/x-icon" />
-  </head>
 
-  <body>
-    <div id="root">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TV Show Project | Senait Ekubai (SenaitEkubai)</title>
+  <link href="style.css" rel="stylesheet" />
+  <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+</head>
+
+<body>
+
+  <div>
+    <h1>Code Your Future TV Show Project</h1>
+    <div>
+      <p> Sourced from TVMAZE<a id="source" href="https://www.tvmaze.com/"> TVMAZE.com</a></p>
     </div>
+  </div>
 
-    <!-- Loads a provided function called getAllEpisodes() which returns all episodes -->
-    <script src="episodes.js"></script>
+  <div id="select-input-container">
+    <select name="Episodes" id="selectShow">
+      <option value="">select a Show</option>
+    </select>
+    <select name="Episodes" id="selectMenu">
+      <option value="" id="default-option">select an episode</option>
+    </select>
 
-    <!-- Loads YOUR javascript code -->
-    <script src="script.js"></script>
-  </body>
+    <input id="search-field" type="search" placeholder="Search for an episode">
+    <span id="results"></span>
+  </div>
+  <input id="byRating" type="radio">Sort by rating</input>
+
+
+
+  </div>
+  <div id="root"></div>
+
+  <script src="shows.js"></script>
+  <script src="episodes.js"></script>
+
+
+  <script src="script.js"></script>
+
+</body>
+
 </html>
