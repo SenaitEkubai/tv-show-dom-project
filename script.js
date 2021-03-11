@@ -1,8 +1,12 @@
 // fetch function that will fetch data from "https://api.tvmaze.com/shows/527/episodes"
 
+// global variables
+
 let episodes;
 let allShows = getAllShows();
 let result = document.getElementById("results");
+const selectShowTag = document.getElementById("selectShow");
+const selectEpisodeTag = document.getElementById("selectMenu");
 let mode = "shows";
 
 // calling all functions
@@ -12,9 +16,9 @@ displayAllShows(allShows);
 result.innerHTML = `Displaying ${allShows.length} / ${allShows.length}`;
 
 /***************************************************************code for show starts here********************************** */
-// sort shows function
+// sort shows function alphabetically
 
-function sorter(array) {
+function sortByName(array) {
   array.sort((a, b) => {
     if (a.name < b.name) {
       return -1;
@@ -22,7 +26,17 @@ function sorter(array) {
     return 1;
   });
 }
+// sort shows by rating
 
+function sortByRating(allShows) {
+  allShows.sort((a, b) => {
+    console.log(a.rating.average);
+    if (a.rating.average < b.rating.average) {
+      return 1;
+    }
+    return -1;
+  });
+}
 // fetch allEpisodes function
 
 function fetchEpisodes(showId) {
@@ -55,15 +69,16 @@ function filterShows(event) {
     */
 
 function filterEpisodes(event) {
-  console.log(event);
+  let toLowerCaseSummary;
   let value = event.target.value.toLowerCase();
   let foundLists = episodes.filter((episode) => {
     let toLowerCaseName = episode.name.toLowerCase();
-    let toLowerCaseSummary = episode.summary.toLowerCase();
-
-    return (
-      toLowerCaseName.includes(value) || toLowerCaseSummary.includes(value)
-    );
+    if (episode.summary && episode.name) {
+      toLowerCaseSummary = episode.summary.toLowerCase();
+      return (
+        toLowerCaseName.includes(value) || toLowerCaseSummary.includes(value)
+      );
+    } else if (episode.name) return toLowerCaseName.includes(value);
   });
   displayAllEpisodes(foundLists);
   result.innerHTML = `Displaying ${foundLists.length} / ${episodes.length}`;
@@ -72,15 +87,17 @@ function filterEpisodes(event) {
 // this function creates drop down menu for shows
 
 function createDropDownMenuForShows(allShows) {
-  sorter(allShows);
-  const selectShowTag = document.getElementById("selectShow");
+  sortByName(allShows);
   allShows.forEach((show) => {
     let option = document.createElement("option");
     option.innerHTML = `${show.name}`;
     option.value = show.id;
     selectShowTag.appendChild(option);
   });
+  selectAndInputFieldEventListener();
+}
 
+function selectAndInputFieldEventListener() {
   let searchInput = document.getElementById("search-field");
   searchInput.addEventListener("input", filterShows);
   selectShowTag.addEventListener("change", (event) => {
@@ -99,18 +116,17 @@ function createDropDownMenuForShows(allShows) {
         searchInput.removeEventListener("input", filterEpisodes);
         searchInput.addEventListener("input", filterShows);
       }
-      document.getElementById("selectMenu").innerHTML =
+      selectEpisodeTag.innerHTML =
         '<option value="" id="default-option">select an episode</option>';
       displayAllShows(allShows);
       result.innerHTML = `Displaying ${allShows.length} / ${allShows.length}`;
     }
   });
 }
-
 //this function displays all shows
 
 function displayShow(show) {
-  document.querySelector("#selectMenu").style.display = "none";
+  selectEpisodeTag.style.display = "none";
   const divContainer = document.createElement("div");
   const titleElement = document.createElement("h3");
   const imageElement = document.createElement("img");
@@ -147,9 +163,7 @@ function displayShow(show) {
   statusElement.innerHTML = `Status:   ${show.status}`;
 
   if (show.rating) {
-    ratingElement.innerHTML = `Ratings:   ${Object.keys(
-      show.rating
-    )} : ${Object.values(show.rating)}`;
+    ratingElement.innerHTML = `Rating: ${show.rating.average}`;
   }
 
   titleElement.innerHTML = `<a href="#" target="">${show.name}</a>`; //adds anchor element to the title
@@ -180,7 +194,7 @@ function displayAllShows(array) {
 //The display function creates elements and set their inner html for episodes
 
 function display(episode) {
-  document.querySelector("#selectMenu").style.display = "block";
+  selectEpisodeTag.style.display = "block";
   const divContainer = document.createElement("div");
   const titleForEpisodeElement = document.createElement("h3");
   const imageElement = document.createElement("img");
@@ -216,6 +230,23 @@ function display(episode) {
   }
 }
 
+// fetch casting
+
+function fetchCasting() {
+  fetch(`http://api.tvmaze.com/shows/1/band-of-brothers`)
+    .then((response) => response.json())
+    .then((data) => {
+      const castContainer = document.createElement("div");
+      document.body.children[0].appendChild(castContainer);
+      data._embedded.cast.forEach((item) => {
+        console.log(item.person.name);
+        let castElement = document.createElement("p");
+        castElement.innerHTML = `<a href="#" target=""> ${item.person.name},  </a> `;
+        castContainer.appendChild(castElement);
+      });
+    });
+}
+
 /*this function calls the display function for each episode */
 
 function displayAllEpisodes(array) {
@@ -228,7 +259,6 @@ function displayAllEpisodes(array) {
 // create dropdown menu function
 
 function createDropDownMenuForEpisodes(allEpisodes) {
-  const selectEpisodeTag = document.getElementById("selectMenu");
   selectEpisodeTag.innerHTML =
     '<option value="" id="default-option">select an episode</option>';
   allEpisodes.forEach((episode) => {
